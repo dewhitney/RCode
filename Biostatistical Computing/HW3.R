@@ -30,21 +30,34 @@ pval = function(model){
 
 do.typeII = function(n, probs = seq(0,1,0.25)){
   x = seq(0,1,by=1/(n-1))
-  y = x + rnorm(n)
+  y1 = x + rnorm(n)
+  y2 = 2.5*x^2 - 2*x + rnorm(n) 
   
   q = quantile(x, probs=probs)
   xbyq = character(n)
   for(i in 1:4){xbyq[is.in(x,q[i],q[i+1])]=i}
   
-  lm.a = lm(y~x)
-  lm.b = lm(y~xbyq)
-  lm.c = lm(y~as.numeric(xbyq))
+  lm1.a = lm(y1~x)
+  lm1.b = lm(y1~xbyq)
+  lm1.c = lm(y1~as.numeric(xbyq))
+  
+  lm2.a = lm(y2~x)
+  lm2.b = lm(y2~xbyq)
+  lm2.c = lm(y2~as.numeric(xbyq))
   
   alpha = 0.05
-  p = c(A=pval(lm.a),B=pval(lm.b),C=pval(lm.c))
-  return(p<alpha)
+  p = c(A1=pval(lm1.a),B1=pval(lm1.b),C1=pval(lm1.c),
+        A2=pval(lm2.a),B2=pval(lm2.b),C2=pval(lm2.c))
+  return(p>alpha)
 }
 
 set.seed(19)
 B = 10000
-power = apply(replicate(B, do.typeII(n=n)),MARGIN=1,FUN=mean)
+power = 1 - apply(replicate(B, do.typeII(n=100)),MARGIN=1,FUN=mean)
+power.keen = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.1))),MARGIN=1,FUN=mean)
+power.more = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.5))),MARGIN=1,FUN=mean)
+
+# Problem 2
+# Coordinate descent
+
+

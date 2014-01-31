@@ -15,7 +15,7 @@ n = c(10L,100L,1000L)
 
 #Had some problems working with the 3D array, so used same seed and stored
 #estimated betas and std errors separately. Revisit this later. -DW
-print(c("b0","b1","n","b0hat","b1hat","coverage"))
+write(c("b0","b1","n","b0hat","b1hat","coverage"), file="HW1out.txt", append=FALSE, sep=",")
 for (i in beta0){
   for(j in beta1){
     for (k in n){
@@ -26,8 +26,9 @@ for (i in beta0){
       set.seed(1)
       many.SEs = t(replicate(1000, do.one(b0=i,b1=j,n=k)$coefficients[,2]))
       
-      cover.beta1 = mean({{many.betas[,2] - 1.96*many.SEs[,2]} < j } & {j < {many.betas[,2] + 1.96*many.SEs[,2]}})
-      print(c(i,j,k,as.vector(many.mean),cover.beta1))
+      crit = qt(.025,df=k-1,lower.tail=FALSE)
+      cover.beta1 = mean({{many.betas[,2] - crit*many.SEs[,2]} < j } & {j < {many.betas[,2] + crit*many.SEs[,2]}})
+      write(c(i,j,k,as.vector(many.mean),cover.beta1), file="HW1out.txt", append=TRUE, sep=",")
     }
   }
 }
@@ -52,7 +53,8 @@ do.one = function(b0,b1,n){
   return(summary(model))
 }
 
-print(c("b0","b1","n","b0hat","b1hat","coverage"))
+
+write(c("b0","b1","n","b0hat","b1hat","coverage"), file="HW1out.txt", append=TRUE, sep=",")
 for (i in beta0){
   for(j in beta1){
     for (k in n){
@@ -63,8 +65,9 @@ for (i in beta0){
       set.seed(1)
       many.SEs = t(replicate(1000, do.one(b0=i,b1=j,n=k)$coefficients[,2]))
       
-      cover.beta1 = mean({{many.betas[,2] - 1.96*many.SEs[,2]} < j } & {j < {many.betas[,2] + 1.96*many.SEs[,2]}})
-      print(c(i,j,k,as.vector(many.mean),cover.beta1))
+      crit = qt(.025,df=k-1,lower.tail=FALSE)
+      cover.beta1 = mean({{many.betas[,2] - crit*many.SEs[,2]} < j } & {j < {many.betas[,2] + crit*many.SEs[,2]}})
+      write(c(i,j,k,as.vector(many.mean),cover.beta1), file="HW1out.txt", append=TRUE, sep=",")
     }
   }
 }
@@ -80,7 +83,8 @@ do.one = function(b0,b1,n){
   return(summary(model))
 }
 
-print(c("b0","b1","n","b0hat","b1hat","coverage"))
+
+write(c("b0","b1","n","b0hat","b1hat","coverage"), file="HW1out.txt", append=TRUE, sep=",")
 for (i in beta0){
   for(j in beta1){
     for (k in n){
@@ -91,8 +95,9 @@ for (i in beta0){
       set.seed(1)
       many.SEs = t(replicate(1000, do.one(b0=i,b1=j,n=k)$coefficients[,2]))
       
-      cover.beta1 = mean({{many.betas[,2] - 1.96*many.SEs[,2]} < j } & {j < {many.betas[,2] + 1.96*many.SEs[,2]}})
-      print(c(i,j,k,as.vector(many.mean),cover.beta1))
+      crit = qt(.025,df=k-1,lower.tail=FALSE)
+      cover.beta1 = mean({{many.betas[,2] - crit*many.SEs[,2]} < j } & {j < {many.betas[,2] + crit*many.SEs[,2]}})
+      write(c(i,j,k,as.vector(many.mean),cover.beta1), file="HW1out.txt", append=TRUE, sep=",")
     }
   }
 }
