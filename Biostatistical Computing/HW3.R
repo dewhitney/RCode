@@ -54,10 +54,46 @@ do.typeII = function(n, probs = seq(0,1,0.25)){
 set.seed(19)
 B = 10000
 power = 1 - apply(replicate(B, do.typeII(n=100)),MARGIN=1,FUN=mean)
-power.keen = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.1))),MARGIN=1,FUN=mean)
-power.more = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.5))),MARGIN=1,FUN=mean)
+morefactor = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.1))),MARGIN=1,FUN=mean)
+lessfactor = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.5))),MARGIN=1,FUN=mean)
+allfactor = 1 - apply(replicate(B, do.typeII(n=100,probs = seq(0,1,0.01))),MARGIN=1,FUN=mean)
 
 # Problem 2
 # Coordinate descent
 
+library(MASS)
 
+lm.descent = function(x,y, epsilon=1e-10, const=TRUE){
+  ols = coef(lm(y~x))
+  if(const){x = cbind(1,x)}
+  x = as.matrix(x)
+  k = ncol(x)
+  n = length(y)
+  betas = numeric(k)
+  not.done = TRUE
+  ticker = 0
+  while(not.done){
+    #prev = betas
+    for(i in 1:k){
+      r = numeric(n)
+      for(j in 1:n){
+        r[j] = y[j] - t(betas[-k]) %*% x[j,-k]
+      }
+      betas[k] = sum(x[,k]*r) / (t(x[,k]) %*% x[,k])
+    }
+    not.done = t(ols-betas) %*% {ols-betas} > epsilon
+    ticker = ticker+1
+  }
+  return( c(betas,after=ticker) )
+}
+
+set.seed(1990)
+n = 100
+
+xi = matrix(rnorm(2*n),ncol=2)
+yi = x[,1] + rnorm(n)
+lm.descent(xi,yi)
+
+xii = mvrnorm(n, mu=c(0,0), Sigma = matrix(c(1,.8,.8,1),ncol=2))
+yii = x[,1] + rnorm(n)
+lm.descent(xii,yii)
