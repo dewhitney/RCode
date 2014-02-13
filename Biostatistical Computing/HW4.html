@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>David Whitney&#39;s Homework 4</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h2>David Whitney&#39;s Homework 4</h2>
+
+<h2>Biostatistics 562</h2>
+
+<h3>Problem 1</h3>
+
+<p>For a differential expression simulation study, say 1000 genes are measured on 100 individuals. Let the first 50 individuals constitute <em>class1</em> and the second 50 individuals be <em>class2</em>. Suppose that expression levels are independent and normally distributed across genes. For individuals in <em>class2</em>, let the last 100 genes be distributed N(0.5,1). For all other genes, assume that the distribution of gene expression is standard normal.</p>
+
+<h3>1a.</h3>
+
+<p>Run one simulation of the experiment and test for differentially expressed genes (genes with mean differences between the two classes) with a false discovery rate cutoff of 10%. How many genes were called significant? How many of these were false discoveries?</p>
+
+<p>We find 37 genes that have a significant mean expression between the two classes and 2 of these were false discoveries, having been observed in the first 900 genes.</p>
+
+<h3>1b.</h3>
+
+<p>Repeat this experiment 1000 times. Of the 100 genes we are searching for, what proportion do we find on average (this is known as the true discovery rate TDR)? Of the genes we call significant what proportion on average are false discoveries?  Relate these ideas to the statistical power of our experiment!</p>
+
+<p>After running 1000 of the above simulation studies, we found that the proportion of discoveries that were false discoveries was 0.0905 and the proportion of true discoveries was 0.3189. Power is the probability of rejecting when there is a true effect, so the true discovery rate we estimate is an estimate of the power.</p>
+
+<h3>1c.</h3>
+
+<p>Why might this lead to concern about the reproducibility in these microarray experiments?</br></br></p>
+
+<p>If the power of microarray studies is only 0.3189 and the FDR is being controlled at near .0905, then we are unlikely to detect true effects and we will further expect that of the effects that we are detecting, nearly 10% of them will be false discoveries.</p>
+
+<h3>Problem 2</h3>
+
+<p>We now explore the scenarios under which using FDR as opposed to FWE gives significant additional power.</p>
+
+<h3>2a.</h3>
+
+<p>We consider the study design from <em>Problem 1</em> but assume now that the mean expression for the last 100 genes of <em>class2</em> follow a N(2,1) distribution. </p>
+
+<p>When we control the FDR at 10%, we observe a false discovery proportion of 0.0895 and 100% TDR. When we control FWE at .1, we observe a false discovery proportion of 0.0007 and 100% TDR. In this case, the Bonferroni correction outperforms Benjamini-Hochberg by having equal power and a lower Type I error rate.</p>
+
+<h3>2b.</h3>
+
+<p>We consider the study design from <em>Problem 1</em> but assume now that the mean expression for the last 100 genes of <em>class2</em> follow a N(0.2,1) distribution. </p>
+
+<p>When controlling FDR, the FDP was 0.08793 and TDR 0.00251. For the Bonferroni correction of FWE, the FDP was 0.07617 and the TDR was 0.00181. Both manners of adjusting the p-values had similar powers in this case.
+&lt;\br&gt;
+&lt;\br&gt;</p>
+
+<p>When the differentially expressed genes followed N(0.01,1), &hellip;, N(1.00,1) distributions, controlling the FDR at .10 yielded an estimated false discovery proportion of 0.08933 and true discovery rate of 0.4309. Controlling the FWE instead yielded FDP of 0.003688 and TDR of 0.2146. In this scenario, the TDR obtained by controlling FDR is about twice the power obtained by controlling the FWE.</p>
+
+<h3>Problem 3</h3>
+
+<p>The proportion discoveries was 0.026 when controlling FDR at .10 and 0.025 when controlling the FWE at .10.</p>
+
+<p>The proportion of discoveries was 0.021 for both methods.</p>
+
+</body>
+
+</html>
+
