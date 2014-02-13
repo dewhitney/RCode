@@ -34,3 +34,23 @@ yii = xii[,1] + rnorm(n)
 lm.coorDescent(xii,yii)
 coef(lm(yii~xii)) #Always good to verify results
 
+## Trying to write the faster algorithm
+# So far does not work. Converges to 0 for all betas.
+lm.coorDeSpeed = function(x,y,tol=1e-10,const=TRUE){
+  x = as.matrix(x)
+  if(const){x = cbind(1,x)} #determines presence of intercept
+  k = ncol(x) #number of parameters
+  Beta = numeric(k)
+  i = 0
+  dBeta = 1; r = y
+  while(dBeta > tol){
+    Beta0 = Beta
+    for(j in 1:k){
+      Beta[j] = t(x[,j])%*%r/(t(x[,j])%*%x[,j])
+      r = r - x[,j]*Beta[j]
+    }
+    dBeta = norm(Beta0 - Beta,"2")
+    i = i+1
+  }
+  return(c(coef=Beta,iterations=i))
+}
