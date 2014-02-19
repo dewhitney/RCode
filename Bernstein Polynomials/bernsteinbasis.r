@@ -76,3 +76,15 @@ fastBSin100 = fastB(Sin,100)
 ## expr       min        lq    median       uq       max neval
 ## BSin100(t) 1213.9194 1233.5991 1247.0700 1289.011 1944.6590   100
 ## fastBSin100(t)  309.1887  316.9562  322.6283  342.625  564.1454   100
+
+## N-th Forward difference function
+## debug this
+diff = function(f,x,dx,N=1,fwd=TRUE){
+  pts=ifelse(fwd,seq(N*dx,0,-dx),seq(0,-N*dx,-dx))
+  fpts=f(x+pts)
+  terms=0:N
+  coef=((-1)^terms)*choose(N,terms)
+  return(cbind(fpts,coef))
+}
+
+diff(function(x){x},0,.01)
