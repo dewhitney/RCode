@@ -39,7 +39,7 @@ lasso.gd = function(x,y,grad,lambda,const=FALSE,tol=1e-3){
   while(dBeta > tol){
     Beta0 = Beta
     Beta = sft(Beta0 - t*grad(x,y,Beta0), t*lambda)
-    dBeta = norm(Beta0 - Beta,"1")
+    dBeta = norm(Beta0 - Beta,"2")
     i = i+1
   }
   return(c(coef=Beta,iterations=i))
@@ -70,11 +70,34 @@ for(s in 1:5){
   not0betas[s,]=which(abs(Betas)>0)
 }
 
-
-library(reshape2)
 ## Randomly splitting my data into 10 groups
 group=function(x){
-  randomize = sample(0:99) %/% 10
-  labeled = data.frame(x,randomize)
+  n = dim(x)[1]-1
+  grp = sample(0:n) %/% ((n+1)/10)
+  labeled = data.frame(grp,x)
+  return(labeled)
+}
+
+set.seed(3)
+n = 100
+p = 200
+tuned = data.frame(sigma=1:3, lambda=0) 
+for(sigma in tuned$sigma){
+  results = data.frame(lambda=seq(100,200,5),SSR=0)
+  x = matrix(rnorm(n*p),nrow=n,ncol=p)
+  y = rowSums(x[,1:5]) + rnorm(n=n,sd=sigma)
+  obs = group(data.frame(y,x))
+  for (lambda in results$lambda){
+    SS = numeric(10)
+    for(i in 0:9){
+      train=lasso.gd(obs[which(obs$grp != i),3:202],grpd[which(obs$grp != i),2],linear,lambda)[-201]
+      fit=as.matrix(obs[which(obs$grp == 1),3:202]) %*% as.matrix(train)
+      y=as.matrix(obs[which(obs$grp == 1),2])
+      SS[i+1]=sum((y-fit)^2)
+    }
+    SS = sum(SS)
+    results$SSR[which(results$lambda==lambda)] = SS
+  }
+  tuned$lambda[s]=min(results$lambda[which(results$SSR==min(results$SSR))])
 }
 
