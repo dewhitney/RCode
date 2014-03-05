@@ -49,7 +49,7 @@ lasso.gd = function(x,y,grad,lambda,const=FALSE,tol=1e-3){
 set.seed(101990)
 x = seq(0,1,1/9)
 y = x+rnorm(10)
-lm(y~0+x);lasso.gd(x,y,linear,lambda=0)
+lm(y~0+x);lasso.gd(x,y,linear,lambda=0,tol=.001)
 
 ## Simulate normal data p>>n
 set.seed(17)
@@ -78,12 +78,12 @@ group=function(x){
   return(labeled)
 }
 
-set.seed(3)
+set.seed(90)
 n = 100
 p = 200
-tuned = data.frame(sigma=1:3, lambda=0) 
+tuned = data.frame(sigma=1:3, lambda=0, betas=0) 
 for(sigma in tuned$sigma){
-  results = data.frame(lambda=seq(100,200,5),SSR=0)
+  results = data.frame(lambda=seq(5,10,1),SSR=0)
   x = matrix(rnorm(n*p),nrow=n,ncol=p)
   y = rowSums(x[,1:5]) + rnorm(n=n,sd=sigma)
   obs = group(data.frame(y,x))
@@ -98,6 +98,12 @@ for(sigma in tuned$sigma){
     SS = sum(SS)
     results$SSR[which(results$lambda==lambda)] = SS
   }
-  tuned$lambda[s]=min(results$lambda[which(results$SSR==min(results$SSR))])
+  tuned$lambda[sigma]=min(results$lambda[which(results$SSR==min(results$SSR))])
+  Betas = train=lasso.gd(obs[which(obs$grp != i),3:202],grpd[which(obs$grp != i),2],linear,tuned$lambda[sigma])[-201]
+  tuned$betas[sigma]=sum(abs(Betas)>0)
 }
+
+
+
+
 
