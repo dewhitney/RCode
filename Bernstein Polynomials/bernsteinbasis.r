@@ -2,20 +2,31 @@
 library(plyr)
 
 # Make the (n,k)th Bernstein Basis Polynomial
-mkBnk = function(f=function(x){1},n,k){
-  coef = choose(n,k)*f(k/n)
-  p1 = k
-  p2 = n-k
-  Bnk = function(x){coef*x^p1*(1-x)^p2}
-  #return(c(coef,p1,p2))
+#mkBnk = function(f=function(x){1},n,k){
+#  coef = choose(n,k)*f(k/n)
+#  p1 = k
+#  p2 = n-k
+#  Bnk = function(x){coef*x^p1*(1-x)^p2}
+#  #return(c(coef,p1,p2))
+#  return(Bnk)
+#}
+
+dgeom.n=function(x, size, prob){
+  d=dgeom(x, prob, log=FALSE)/pgeom(size, prob, lower.tail=TRUE, log.p=FALSE)
+  return(d)
+}
+
+mkBnk = function(f=function(x){1},n,k,pmf=dbinom){
+  coef = f(k/n)
+  Bnk = function(x){coef*pmf(k,n,x)}
   return(Bnk)
 }
 
 # Expansion for a function
-Bn = function(f=function(x){1},n){
+Bn = function(f=function(x){1},n,pmf=dbinom){
   g = function(x){f(x)}
   k = matrix(0:n)
-  bnk = apply(k,1,FUN=function(m){mkBnk(f=g,k=m,n=n)})
+  bnk = apply(k,1,FUN=function(m){mkBnk(f=g,k=m,n=n,pmf=pmf)})
   B = function(t){sum(sapply(t, each(bnk)))}
   return(function(t){apply(as.matrix(t),1,B)}) #the default f(x)=1 will satisfy B(X)=1
 }
@@ -30,7 +41,10 @@ Bn = function(f=function(x){1},n){
 #points(x=t,y=y21,type="l",lwd=2,col="forestgreen")
 #points(x=t,y=y22,type="l",lwd=2,col="red")
 
-
+f = function(x){-2*(x-.5)^2+1}
+x = seq(0,1,.01)
+plot(x,f(x),type="l")
+for(N in 1:30){points(x,Bn(f,n=N,pmf=dbinom)(x),type="l")}
 
 ## To use the output function, BX, on a vector of values t
 
